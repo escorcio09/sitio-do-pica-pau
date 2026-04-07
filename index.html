@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistério no Sítio do Pica-Pau Amarelo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f7da;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            border: 4px solid #8bc34a;
+        }
+
+        h1 { color: #2e7d32; }
+
+        #text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #8bc34a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #689f38;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <h1>Sítio do Pica-Pau Amarelo</h1>
+    <div id="text">Carregando aventura...</div>
+    <div id="options" class="options-container"></div>
+</div>
+
+<script>
+    const storyData = {
+        start: {
+            text: "O Sol nasce no Sítio. Narizinho e Emília estão na beira do ribeirão. De repente, elas ouvem um barulho estranho vindo da mata. O que vocês fazem?",
+            options: [
+                { text: "Investigar o barulho na mata", next: "mata" },
+                { text: "Correr para avisar a Dona Benta", next: "casa" }
+            ]
+        },
+        mata: {
+            text: "Na mata, vocês encontram o Pedrinho tentando caçar um Saci com uma peneira! Ele pede ajuda. O que você faz?",
+            options: [
+                { text: "Ajudar Pedrinho a montar a armadilha", next: "saci_preso" },
+                { text: "Dizer que é bobagem e procurar jabuticabas", next: "pomar" }
+            ]
+        },
+        casa: {
+            text: "Dona Benta está na varanda contando histórias. Ela sorri e diz que o barulho deve ser apenas o Visconde fazendo experimentos no porão. Você quer ir ver o Visconde?",
+            options: [
+                { text: "Ir ao porão ver o Visconde de Sabugosa", next: "porao" },
+                { text: "Ficar ouvindo as histórias da vovó", next: "vitoria" }
+            ]
+        },
+        saci_preso: {
+            text: "Zás! O Saci caiu na rede! Ele promete contar onde está o tesouro do Reino das Águas Claras se vocês o soltarem. E agora?",
+            options: [
+                { text: "Soltar o Saci", next: "tesouro" },
+                { text: "Levar o Saci para mostrar para a Emília", next: "confusao" }
+            ]
+        },
+        pomar: {
+            text: "As jabuticabas estão deliciosas! Mas de repente, a Cuca aparece entre as árvores! 'Cuidado!', grita a Tia Nastácia.",
+            options: [
+                { text: "Correr o mais rápido possível", next: "casa" },
+                { text: "Enfrentar a Cuca com a coragem da Emília", next: "derrota_cuca" }
+            ]
+        },
+        // Finais
+        vitoria: {
+            text: "Você passou uma tarde maravilhosa ouvindo histórias e comendo os bolinhos de chuva da Tia Nastácia. Fim!",
+            options: [{ text: "Jogar novamente", next: "start" }]
+        },
+        tesouro: {
+            text: "O Saci cumpriu a promessa! Vocês encontraram pérolas mágicas e agora são protegidos do Reino das Águas Claras. Fim!",
+            options: [{ text: "Jogar novamente", next: "start" }]
+        },
+        confusao: {
+            text: "O Saci escapou e deu um nó nas crinas de todos os cavalos! Que confusão no Sítio! Fim.",
+            options: [{ text: "Jogar novamente", next: "start" }]
+        },
+        derrota_cuca: {
+            text: "A Cuca ficou tão surpresa com sua coragem que tropeçou no próprio rabo e fugiu para a caverna. Você é o herói do Sítio! Fim!",
+            options: [{ text: "Jogar novamente", next: "start" }]
+        },
+        porao: {
+            text: "O Visconde estava apenas tentando inventar um novo tipo de fermento para bolinhos. Ele te deu um livro de presente! Fim.",
+            options: [{ text: "Jogar novamente", next: "start" }]
+        }
+    };
+
+    const textElement = document.getElementById('text');
+    const optionsElement = document.getElementById('options');
+
+    function showScene(sceneKey) {
+        const scene = storyData[sceneKey];
+        textElement.innerText = scene.text;
+        
+        // Limpa os botões anteriores
+        optionsElement.innerHTML = '';
+
+        // Cria novos botões baseados na cena
+        scene.options.forEach(option => {
+            const button = document.createElement('button');
+            button.innerText = option.text;
+            button.onclick = () => showScene(option.next);
+            optionsElement.appendChild(button);
+        });
+    }
+
+    // Inicia o jogo
+    showScene('start');
+</script>
+
+</body>
+</html>
